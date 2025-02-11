@@ -1,26 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import { useState } from "react";
+import Tabel from "./components/Tabel";
 
 function App() {
   const [studentData, setStudentData] = useState([]);
 
-  // const validate = values => {
-  //   const errors = {};
-
-  //   if (!values.firstName) {
-  //     errors.firstName = 'Required';
-  //   }
-
-
-
-  //   if (!values.email) {
-  //     errors.email = 'Required';
-  //   } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-  //     errors.email = 'Invalid email address';
-  //   }
-
-  //   return errors;
-  // };
 
   return (
     <div>
@@ -39,39 +23,38 @@ function App() {
             setStudentData([...studentData, values]);
             console.log(studentData);
           }}
-          // validate={validate}
         >
-          <Form>
-            <div>
+          <Form className="flex flex-col gap-5">
+            <div className="flex gap-5">
               <label htmlFor="firstname">FirstName</label>
-              <Field type='text' id='firstName' name='firstName' />
+              <Field className='border-2' type='text' id='firstName' name='firstName' />
               <ErrorMessage name="firstName" component="div" className="error" />
             </div>
-            <div>
+            <div className="flex gap-5">
               <label htmlFor="lastname">LastName</label>
-              <Field type='text' id='lastName' name='lastName' />
+              <Field className='border-2' type='text' id='lastName' name='lastName' />
               <ErrorMessage name="lastName" component="div" className="error" />
             </div>
-            <div>
+            <div className="flex gap-5" >
               <label htmlFor="email">Email</label>
-              <Field type='email' id='enail' name='email' />
+              <Field className='border-2' type='email' id='enail' name='email' />
               <ErrorMessage name="email" component="div" className="error" />
             </div>
-            <div>
+            <div className="flex gap-5">
               <label htmlFor="phone">Phone</label>
-              <Field type='phone' id='phone' name='phone' />
+              <Field className='border-2' type='phone' id='phone' name='phone' />
               <ErrorMessage name="phone" component="div" className="error" />
             </div>
-            <div>
+            <div className="flex gap-5">
               <label htmlFor="department">Department</label>
-              <Field type='text' id='department' name='department' />
+              <Field className='border-2' type='text' id='department' name='department' />
               <ErrorMessage name="department" component="div" className="error" />
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-20">Submit</button>
           </Form>
         </Formik>
-
       </div>
+          <Tabel data={studentData}/>
     </div>
   )
 }
