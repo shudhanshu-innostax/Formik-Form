@@ -8,6 +8,10 @@
 
 .field{
     width: 300px;
+    padding: 3px;
+    outline: none;
+    border: 2px solid rgb(118, 115, 115);
+    border-radius: 5px;
 }
 
 label{
@@ -25,10 +29,6 @@ label{
     height: 10px;
 }
 
-.table-btn{
-    background-color: green;
-    padding: 10px;
-    border-radius: 5px;
-    color: white;
-    font-weight: 600;
+Link{
+    text-decoration: none;
 }

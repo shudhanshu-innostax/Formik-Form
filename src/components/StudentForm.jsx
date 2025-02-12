@@ -5,7 +5,7 @@ import * as Yup from 'yup'
 import './StudentForm.css'
 
 
-function StudentForm({ studentData, setStudentData }) {
+function StudentForm({ studentData, setStudentData, editStudent, setEditStudent }) {
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const nameRegExp = /^[a-zA-Z]+(?:(?:|['_\. ])([a-zA-Z]*(\.\s)?[a-zA-Z])+)*$/
   const emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -15,14 +15,15 @@ function StudentForm({ studentData, setStudentData }) {
   return (
     <div>
       <h1 className="text-5xl p-5 font-bold text-center bg-blue-900 text-white">Student Form</h1>
-      <div className='form'>
+      <div className='form mt-20'>
         <Formik
+          enableReinitialize
           initialValues={{
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            department: ''
+            firstName: editStudent?.firstName || "",
+            lastName: editStudent?.lastName || "",
+            email: editStudent?.email || "",
+            phone: editStudent?.phone || "",
+            department: editStudent?.department || "",
           }}
           validationSchema={Yup.object({
             firstName: Yup.string()
@@ -48,60 +49,76 @@ function StudentForm({ studentData, setStudentData }) {
               .max(5, "Must be less than 6 characters")
               .required('Required')
           })}
-          onSubmit={(values) => {
-            setStudentData([...studentData, values]);
-            navigate('/table')
+          onSubmit={(values, { resetForm }) => {
+            if (editStudent) {
+              const updatedData = studentData.map((student, index) =>
+                index === editStudent.index ? values : student
+              );
+              setStudentData(updatedData);
+              setEditStudent(null); // Reset edit mode
+            } else {
+              setStudentData([...studentData, values]);
+            }
+
+            resetForm();
+            navigate("/table");
           }}
         >
-          <Form className="form flex gap-7">
-            <div className="flex gap-1 flex-col">
-              <div className="flex gap-5">
-                <label htmlFor="firstname">FirstName</label>
-                <Field className='border-2 field' type='text' id='firstName' name='firstName' />
+          {({ isValid, dirty }) => (
+            <Form className="form flex gap-7">
+              <div className="flex gap-1 flex-col ">
+                <div className="flex gap-5 items-center">
+                  <label htmlFor="firstname">FirstName</label>
+                  <Field className='border-2 field' type='text' id='firstName' name='firstName' />
+                </div>
+                <div className="error-div">
+                  <ErrorMessage name="firstName" component="div" className="error" />
+                </div>
               </div>
-              <div className="error-div">
-                <ErrorMessage name="firstName" component="div" className="error" />
+              <div className="flex gap-1 flex-col">
+                <div className="flex gap-5">
+                  <label htmlFor="lastname">LastName</label>
+                  <Field className='border-2 field' type='text' id='lastName' name='lastName' />
+                </div>
+                <div className="error-div">
+                  <ErrorMessage name="lastName" component="div" className="error" />
+                </div>
               </div>
-            </div>
-            <div className="flex gap-1 flex-col">
-              <div className="flex gap-5">
-                <label htmlFor="lastname">LastName</label>
-                <Field className='border-2 field' type='text' id='lastName' name='lastName' />
+              <div className="flex gap-1 flex-col" >
+                <div className="flex gap-5">
+                  <label htmlFor="email">Email</label>
+                  <Field className='border-2 field' type='email' id='enail' name='email' />
+                </div>
+                <div className="error-div">
+                  <ErrorMessage name="email" component="div" className="error" />
+                </div>
               </div>
-              <div className="error-div">
-                <ErrorMessage name="lastName" component="div" className="error" />
+              <div className="flex gap-1 flex-col">
+                <div className="flex gap-5">
+                  <label htmlFor="phone">Phone</label>
+                  <Field className='border-2 field' type='phone' id='phone' name='phone' />
+                </div>
+                <div className="error-div">
+                  <ErrorMessage name="phone" component="div" className="error" />
+                </div>
               </div>
-            </div>
-            <div className="flex gap-1 flex-col" >
-              <div className="flex gap-5">
-                <label htmlFor="email">Email</label>
-                <Field className='border-2 field' type='email' id='enail' name='email' />
+              <div className="flex gap-1 flex-col">
+                <div className="flex gap-5">
+                  <label htmlFor="department">Department</label>
+                  <Field className='border-2 field' type='text' id='department' name='department' />
+                </div>
+                <div className="error-div">
+                  <ErrorMessage name="department" component="div" className="error" />
+                </div>
               </div>
-              <div className="error-div">
-                <ErrorMessage name="email" component="div" className="error" />
-              </div>
-            </div>
-            <div className="flex gap-1 flex-col">
-              <div className="flex gap-5">
-                <label htmlFor="phone">Phone</label>
-                <Field className='border-2 field' type='phone' id='phone' name='phone' />
-              </div>
-              <div className="error-div">
-                <ErrorMessage name="phone" component="div" className="error" />
-              </div>
-            </div>
-            <div className="flex gap-1 flex-col">
-              <div className="flex gap-5">
-                <label htmlFor="department">Department</label>
-                <Field className='border-2 field' type='text' id='department' name='department' />
-              </div>
-              <div className="error-div">
-                <ErrorMessage name="department" component="div" className="error" />
-              </div>
-            </div>
-            <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-20">Submit</button>
-            <Link className="table-btn" to={'/table'}>Show table</Link>
-          </Form>
+              <div className="flex gap-10 mt-10">
+                <button type="submit" className={`text-white bg-blue-700 rounded-md px-4 py-2 cursor-pointer ${!isValid || !dirty ? "opacity-50 cursor-not-allowed" : ""
+                  }`} disabled={!isValid || !dirty} >
+                  Submit
+                </button>
+                <Link className="text-white bg-green-700 cursor-pointer px-4 py-3 text-sm font-medium text-center rounded-md" to={'/table'}>Show table</Link></div>
+            </Form>
+          )}
         </Formik>
       </div>
     </div>
