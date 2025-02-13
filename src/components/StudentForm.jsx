@@ -1,21 +1,28 @@
 /* eslint-disable react/prop-types */
-import { Formik, Form, Field, ErrorMessage } from "formik"
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link, useNavigate } from "react-router-dom";
-import * as Yup from 'yup'
-import './StudentForm.css'
+import * as Yup from "yup";
+import "./StudentForm.css";
+import { addForm, updateForm } from "../slices/formslice";
+import { useDispatch, useSelector } from "react-redux";
 
+function StudentForm({ editStudent, setEditStudent }) {
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  const nameRegExp = /^[a-zA-Z]+(?:(?:|['_\. ])([a-zA-Z]*(\.\s)?[a-zA-Z])+)*$/;
+  const emailRegExp =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-function StudentForm({ studentData, setStudentData, editStudent, setEditStudent }) {
-  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
-  const nameRegExp = /^[a-zA-Z]+(?:(?:|['_\. ])([a-zA-Z]*(\.\s)?[a-zA-Z])+)*$/
-  const emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.studentForm.formData);
 
   return (
     <div>
-      <h1 className="text-5xl p-5 font-bold text-center bg-blue-900 text-white">Student Form</h1>
-      <div className='form mt-20'>
+      <h1 className="text-5xl p-5 font-bold text-center bg-blue-900 text-white">
+        Student Form
+      </h1>
+      <div className="form mt-20">
         <Formik
           enableReinitialize
           initialValues={{
@@ -28,38 +35,38 @@ function StudentForm({ studentData, setStudentData, editStudent, setEditStudent 
           validationSchema={Yup.object({
             firstName: Yup.string()
               .matches(nameRegExp, "Enter correct firstname")
-              .min(4, 'Must be atleast 4 characters')
-              .max(12, 'Must be 12 characters or less')
-              .required('Required'),
+              .min(4, "Must be atleast 4 characters")
+              .max(12, "Must be 12 characters or less")
+              .required("Required"),
             lastName: Yup.string()
               .matches(nameRegExp, "Enter correct lastname")
-              .min(4, 'Must be atleast 4 characters')
-              .max(10, 'Must be 10 characters or less')
-              .required('Required'),
-            email: Yup.string().email('Invalid email address')
+              .min(4, "Must be atleast 4 characters")
+              .max(10, "Must be 10 characters or less")
+              .required("Required"),
+            email: Yup.string()
+              .email("Invalid email address")
               .matches(emailRegExp, "Invalid email address")
-              .required('Required'),
+              .required("Required"),
             phone: Yup.string()
               .required("Required")
-              .matches(phoneRegExp, 'Phone number is not valid')
+              .matches(phoneRegExp, "Phone number is not valid")
               .min(10, "too short")
               .max(10, "too long"),
             department: Yup.string()
               .min(3, "Must be atleast 3 characters")
               .max(5, "Must be less than 6 characters")
-              .required('Required')
+              .required("Required"),
           })}
           onSubmit={(values, { resetForm }) => {
             if (editStudent) {
-              const updatedData = studentData.map((student, index) =>
+              const updatedData = data.map((student, index) =>
                 index === editStudent.index ? values : student
               );
-              setStudentData(updatedData);
-              setEditStudent(null); // Reset edit mode
+              dispatch(updateForm({ text: updatedData }))
+              setEditStudent(null);
             } else {
-              setStudentData([...studentData, values]);
+              dispatch(addForm({ text: values }));
             }
-
             resetForm();
             navigate("/table");
           }}
@@ -69,60 +76,115 @@ function StudentForm({ studentData, setStudentData, editStudent, setEditStudent 
               <div className="flex gap-1 flex-col ">
                 <div className="flex gap-5 items-center">
                   <label htmlFor="firstname">FirstName</label>
-                  <Field className='border-2 field' type='text' id='firstName' name='firstName' />
+                  <Field
+                    className="border-2 field"
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                  />
                 </div>
                 <div className="error-div">
-                  <ErrorMessage name="firstName" component="div" className="error" />
+                  <ErrorMessage
+                    name="firstName"
+                    component="div"
+                    className="error"
+                  />
                 </div>
               </div>
               <div className="flex gap-1 flex-col">
                 <div className="flex gap-5">
                   <label htmlFor="lastname">LastName</label>
-                  <Field className='border-2 field' type='text' id='lastName' name='lastName' />
+                  <Field
+                    className="border-2 field"
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                  />
                 </div>
                 <div className="error-div">
-                  <ErrorMessage name="lastName" component="div" className="error" />
+                  <ErrorMessage
+                    name="lastName"
+                    component="div"
+                    className="error"
+                  />
                 </div>
               </div>
-              <div className="flex gap-1 flex-col" >
+              <div className="flex gap-1 flex-col">
                 <div className="flex gap-5">
                   <label htmlFor="email">Email</label>
-                  <Field className='border-2 field' type='email' id='enail' name='email' />
+                  <Field
+                    className="border-2 field"
+                    type="email"
+                    id="enail"
+                    name="email"
+                  />
                 </div>
                 <div className="error-div">
-                  <ErrorMessage name="email" component="div" className="error" />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="error"
+                  />
                 </div>
               </div>
               <div className="flex gap-1 flex-col">
                 <div className="flex gap-5">
                   <label htmlFor="phone">Phone</label>
-                  <Field className='border-2 field' type='phone' id='phone' name='phone' />
+                  <Field
+                    className="border-2 field"
+                    type="phone"
+                    id="phone"
+                    name="phone"
+                  />
                 </div>
                 <div className="error-div">
-                  <ErrorMessage name="phone" component="div" className="error" />
+                  <ErrorMessage
+                    name="phone"
+                    component="div"
+                    className="error"
+                  />
                 </div>
               </div>
               <div className="flex gap-1 flex-col">
                 <div className="flex gap-5">
                   <label htmlFor="department">Department</label>
-                  <Field className='border-2 field' type='text' id='department' name='department' />
+                  <Field
+                    className="border-2 field"
+                    type="text"
+                    id="department"
+                    name="department"
+                  />
                 </div>
                 <div className="error-div">
-                  <ErrorMessage name="department" component="div" className="error" />
+                  <ErrorMessage
+                    name="department"
+                    component="div"
+                    className="error"
+                  />
                 </div>
               </div>
               <div className="flex gap-10 mt-10">
-                <button type="submit" className={`text-white bg-blue-700 rounded-md px-4 py-2 cursor-pointer ${!isValid || !dirty ? "opacity-50 cursor-not-allowed" : ""
-                  }`} disabled={!isValid || !dirty} >
+                <button
+                  type="submit"
+                  className={`text-white bg-blue-700 rounded-md px-4 py-2 cursor-pointer ${!isValid || !dirty ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                  disabled={!isValid || !dirty}
+                >
                   Submit
                 </button>
-                <Link className="text-white bg-green-700 cursor-pointer px-4 py-3 text-sm font-medium text-center rounded-md" to={'/table'}>Show table</Link></div>
+                <Link
+                  className="text-white bg-green-700 cursor-pointer px-4 py-3 text-sm font-medium text-center rounded-md"
+                  to={"/table"}
+                >
+                  Show table
+                </Link>
+              </div>
             </Form>
           )}
         </Formik>
       </div>
     </div>
-  )
+  );
 }
 
-export default StudentForm
+export default StudentForm;

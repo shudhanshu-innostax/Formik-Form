@@ -10,7 +10,6 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const [studentData, setStudentData] = useState([]);
   const [editStudent, setEditStudent] = useState(null);
 
   return (
@@ -21,8 +20,6 @@ function App() {
             path="/"
             element={
               <StudentForm
-                setStudentData={setStudentData}
-                studentData={studentData}
                 editStudent={editStudent}
                 setEditStudent={setEditStudent}
               />
@@ -32,9 +29,7 @@ function App() {
             path="/table"
             element={
               <TabelWrapper
-                studentData={studentData}
                 setEditStudent={setEditStudent}
-                setStudentData={setStudentData}
               />
             }
           />
@@ -44,7 +39,7 @@ function App() {
   );
 }
 
-function TabelWrapper({ studentData, setEditStudent, setStudentData }) {
+function TabelWrapper({setEditStudent}) {
   const navigate = useNavigate();
 
   const handleEdit = (student, index) => {
@@ -52,12 +47,8 @@ function TabelWrapper({ studentData, setEditStudent, setStudentData }) {
     navigate("/");
   };
 
-  const handleDelete = (index) => {
-    setStudentData(studentData.filter((_, i) => i !== index));
-  };
-
   return (
-    <Tabel data={studentData} onEdit={handleEdit} onDelete={handleDelete} />
+    <Tabel onEdit={handleEdit}/>
   );
 }
 
