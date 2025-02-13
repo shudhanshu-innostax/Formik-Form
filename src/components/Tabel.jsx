@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import './Table.css'
 
 function Tabel({ data,onEdit,onDelete }) {
