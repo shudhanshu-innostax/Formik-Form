@@ -1,11 +1,18 @@
 /* eslint-disable react/prop-types */
 import { useDispatch, useSelector } from "react-redux";
 import "./Table.css";
-import { removeForm } from "../slices/formslice";
+import {  fetchData, removeForm } from "../slices/formslice";
+// import { getFormData } from "../services";
+import { useEffect } from "react";
 
 function Tabel({ onEdit }) {
   const data = useSelector((state) => state.studentForm.formData);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchData())
+  },[])
+
   return (
     <div className="tabel">
       <div className="text-5xl font-bold text-center p-5 bg-blue-900 text-white">
@@ -31,11 +38,12 @@ function Tabel({ onEdit }) {
               </tr>
             </thead>
             <tbody>
-              {data.map((value, index) => {
+              {data.map((value,index) => {
                 return (
-                  <tr key={index}>
+                  <tr key={value._id}>
                     <td className="border border-gray-500 p-2 text-center">
                       {value.firstName}
+                      
                     </td>
                     <td className="border border-gray-500 p-2 text-center">
                       {value.lastName}

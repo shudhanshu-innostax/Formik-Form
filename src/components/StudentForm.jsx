@@ -3,12 +3,14 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import "./StudentForm.css";
-import { addForm, updateForm } from "../slices/formslice";
+import {  updateForm } from "../slices/formslice";
 import { useDispatch, useSelector } from "react-redux";
+import { sendFormData } from "../services";
 
 function StudentForm({ editStudent, setEditStudent }) {
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  // eslint-disable-next-line no-useless-escape
   const nameRegExp = /^[a-zA-Z]+(?:(?:|['_\. ])([a-zA-Z]*(\.\s)?[a-zA-Z])+)*$/;
   const emailRegExp =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -65,7 +67,8 @@ function StudentForm({ editStudent, setEditStudent }) {
               dispatch(updateForm({ text: updatedData }))
               setEditStudent(null);
             } else {
-              dispatch(addForm({ text: values }));
+              // sending data to backend using axios
+              sendFormData(values);
             }
             resetForm();
             navigate("/table");
