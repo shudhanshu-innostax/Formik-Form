@@ -3,8 +3,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import "./StudentForm.css";
-import {  updateForm } from "../slices/formslice";
-import { useDispatch, useSelector } from "react-redux";
+import {  updateData } from "../slices/formslice";
+import { useDispatch } from "react-redux";
 import { sendFormData } from "../services";
 
 function StudentForm({ editStudent, setEditStudent }) {
@@ -17,7 +17,6 @@ function StudentForm({ editStudent, setEditStudent }) {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.studentForm.formData);
 
   return (
     <div>
@@ -61,13 +60,9 @@ function StudentForm({ editStudent, setEditStudent }) {
           })}
           onSubmit={(values, { resetForm }) => {
             if (editStudent) {
-              const updatedData = data.map((student, index) =>
-                index === editStudent.index ? values : student
-              );
-              dispatch(updateForm({ text: updatedData }))
+              dispatch(updateData({ id: editStudent._id, updatedData: values }));
               setEditStudent(null);
             } else {
-              // sending data to backend using axios
               sendFormData(values);
             }
             resetForm();

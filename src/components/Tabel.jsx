@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useDispatch, useSelector } from "react-redux";
 import "./Table.css";
-import {  fetchData, removeForm } from "../slices/formslice";
-// import { getFormData } from "../services";
+import { fetchData, deleteData } from "../slices/formslice";
 import { useEffect } from "react";
 
 function Tabel({ onEdit }) {
@@ -11,7 +10,7 @@ function Tabel({ onEdit }) {
 
   useEffect(() => {
     dispatch(fetchData())
-  },[])
+  }, [dispatch])
 
   return (
     <div className="tabel">
@@ -38,12 +37,12 @@ function Tabel({ onEdit }) {
               </tr>
             </thead>
             <tbody>
-              {data.map((value,index) => {
+              {data.map((value) => {
                 return (
                   <tr key={value._id}>
                     <td className="border border-gray-500 p-2 text-center">
                       {value.firstName}
-                      
+
                     </td>
                     <td className="border border-gray-500 p-2 text-center">
                       {value.lastName}
@@ -60,13 +59,13 @@ function Tabel({ onEdit }) {
                     <td className="border border-gray-500 p-2 text-center">
                       <button
                         className="bg-green-600 text-white px-3 py-1 rounded mr-2 hover:bg-green-700"
-                        onClick={() => onEdit(value, index)}
+                        onClick={() => onEdit(value, { _id: value._id })}
                       >
                         Edit
                       </button>
                       <button
                         className="bg-red-700 text-white px-3 py-1 rounded hover:bg-red-700"
-                        onClick={() => dispatch(removeForm({ index }))}
+                        onClick={() => dispatch(deleteData(String(value._id)))}
                       >
                         Delete
                       </button>

@@ -42,8 +42,8 @@ function App() {
 function TabelWrapper({setEditStudent}) {
   const navigate = useNavigate();
 
-  const handleEdit = (student, index) => {
-    setEditStudent({ ...student, index });
+  const handleEdit = (student, _id) => {
+    setEditStudent({ ...student, _id });
     navigate("/");
   };
 
