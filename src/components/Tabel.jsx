@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import "./Table.css";
 import { fetchData, deleteData } from "../slices/formslice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Tabel({ onEdit }) {
   const data = useSelector((state) => state.studentForm.formData);
@@ -12,11 +12,35 @@ function Tabel({ onEdit }) {
     dispatch(fetchData())
   }, [dispatch])
 
+  const [pages,setPages] = useState(1);
+
+  
+  const itemsPerPage = 8;
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  const selectPageHandler = (selectedPage) => {
+    setPages(selectedPage);
+  };
+
+  const handleNextPage = () => {
+    if (pages < totalPages) {
+      setPages(pages + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (pages > 1) {
+      setPages(pages - 1);
+    }
+  };
+
   return (
     <div className="tabel">
       <div className="text-5xl font-bold text-center p-5 bg-blue-900 text-white">
         <h1>Table</h1>
       </div>
+
+
       {data.length === 0 ? (
         <h1 className="text-center mt-40 text-2xl">No data found</h1>
       ) : (
@@ -37,7 +61,7 @@ function Tabel({ onEdit }) {
               </tr>
             </thead>
             <tbody>
-              {data.map((value) => {
+              {data.slice((pages - 1) * itemsPerPage, pages * itemsPerPage).map((value) => {
                 return (
                   <tr key={value._id}>
                     <td className="border border-gray-500 p-2 text-center">
@@ -77,6 +101,35 @@ function Tabel({ onEdit }) {
           </table>
         </div>
       )}
+
+      
+<div className="flex justify-center absolute top-160 left-155">
+        {data.length > 0 && (
+          <div className="flex gap-5 items-center">
+            <div>
+              <span onClick={handlePreviousPage} className={`cursor-pointer bg-red-700 text-white p-2 rounded ${pages === 1 ? "hidden" : ""}`}>
+                Prev
+              </span>
+            </div>
+            <div className="flex gap-5">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <span
+                  key={i}
+                  className={`bg-black text-white cursor-pointer px-4 py-2 rounded ${pages === i + 1 ? "bg-blue-500" : ""}`}
+                  onClick={() => selectPageHandler(i + 1)}
+                >
+                  {i + 1}
+                </span>
+              ))}
+            </div>
+            <div>
+              <span onClick={handleNextPage} className={`cursor-pointer bg-red-700 text-white p-2 rounded ${pages === totalPages ? "hidden" : ""}`}>
+                Next
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
