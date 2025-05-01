@@ -1,0 +1,34 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    padding: 20px;
+}
+
+.field{
+    width: 300px;
+    padding: 3px;
+    outline: none;
+    border: 2px solid rgb(118, 115, 115);
+    border-radius: 5px;
+}
+
+label{
+    width: 100px;
+    text-align: start;
+}
+
+.error{
+    color: red;
+    margin-left: 120px;
+    font-size: 12px;
+}
+
+.error-div{
+    height: 10px;
+}
+
+Link{
+    text-decoration: none;
+}

@@ -1,0 +1,20 @@
+.table{
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+table{
+    width:1200px;
+}
+
+thead{
+    background-color: rgb(228, 6, 6);
+    color: white;
+}
+
+tbody{
+    background-color: rgb(185, 223, 223);
+}
+
+tr:hover {background-color: coral;}
